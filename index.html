@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XM-Serve Switch Calculator · Team Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF8F4;--card:#fff;--tint:#F0EBE1;--ink:#2B2B2B;--mute:#6B6860;--line:#DDD6C8;--acc:#B4532A;--ok:#2F6B4F;--bad:#B4532A}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 24px 48px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.top h1{font-size:28px}.sub{color:var(--mute);font-size:14px;margin-top:2px}
+.badge{font-size:12px;font-weight:600;color:var(--acc);border:1px solid var(--acc);border-radius:999px;padding:4px 10px;white-space:nowrap}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0 18px}
+nav a{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+nav a b{display:block;font-size:14px}nav a span{font-size:12px;color:var(--mute)}
+nav a.on{border-color:var(--ink);box-shadow:inset 0 -3px 0 var(--ink)}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:820px){.g2,.g3,.g4,nav{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card.t{background:var(--tint)}.card h3{font-size:18px;margin-bottom:10px}
+.lead{font-size:16px;margin:0 0 14px;color:var(--ink)}
+label{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #EFEAE0;font-size:14px}
+label:last-child{border-bottom:0}label small{display:block;color:var(--mute);font-size:12px}
+input[type=number]{width:96px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;font:inherit;text-align:right;background:#fff}
+input[type=number]:focus{outline:2px solid var(--ink);outline-offset:1px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+button{font:inherit;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;border:1px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
+button.pri{background:var(--ink);color:#fff}button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:8px;overflow:hidden}.seg button{border:0;border-radius:0}.seg button.on{background:var(--ink);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:right;padding:8px 10px;border-bottom:1px solid #EFEAE0}
+th:first-child,td:first-child{text-align:left}th{font-size:12px;color:var(--mute);font-weight:600}
+td.hl{font-weight:700;color:var(--acc)}
+.big{font-family:"Source Serif 4",Georgia,serif;font-size:30px;font-weight:700;line-height:1.1}
+.k{font-size:12px;color:var(--mute)}
+.verdict{display:flex;align-items:center;gap:18px;padding:18px 20px;border-radius:12px;color:#fff}
+.verdict.go{background:var(--ink)}.verdict.no{background:var(--acc)}
+.verdict .big{font-size:34px}.verdict p{margin:2px 0 0;font-size:14px;opacity:.92}
+.gate{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #EFEAE0;font-size:14px}.gate:last-child{border:0}
+.dot{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:700}
+.dot.y{background:var(--ok)}.dot.n{background:var(--bad)}
+.bar{display:flex;height:40px;border-radius:6px;overflow:hidden;font-size:13px;font-weight:600}
+.bar div{display:flex;align-items:center;padding:0 10px;white-space:nowrap;overflow:hidden}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-top:8px}.leg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.live{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:-6px 0 18px;font-size:14px}
+.live b.w{font-family:"Source Serif 4",Georgia,serif;font-size:20px;padding:2px 10px;border-radius:6px;color:#fff}
+.live .sep{color:var(--line)}
+.sl{padding:8px 0;border-bottom:1px solid #EFEAE0}.sl:last-child{border:0}
+.sl .row{display:flex;justify-content:space-between;font-size:14px}.sl .row b{font-variant-numeric:tabular-nums}
+.sl input[type=range]{width:100%;accent-color:var(--ink);margin:6px 0 0;height:22px;cursor:pointer}
+.note{font-size:12px;color:var(--mute);margin-top:10px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--acc);text-transform:uppercase}
+.kpi{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #EFEAE0;font-size:14px}.kpi:last-child{border:0}
+.kpi .v{font-weight:700;text-align:right}.kpi small{display:block;color:var(--mute);font-size:12px;font-weight:400}
+.step{display:none}.step.on{display:block}
+.next{margin-top:18px;display:flex;justify-content:flex-end}
+footer{margin-top:28px;font-size:12px;color:var(--mute);border-top:1px solid var(--line);padding-top:12px}
+</style></head><body><div class="wrap">
+<div class="top"><div><span class="tag">Netpreme × HBSA PM Case 2026 · team prototype</span><h1>XM-Serve switch calculator</h1>
+<div class="sub">For an operator's inference lead deciding whether to move one workload to XM-Serve.</div></div>
+<span class="badge">Illustrative data · not customer results</span></div>
+<nav id="nav">
+<a href="#workload" data-s="workload"><b>1 · Workload</b><span>Costs and best alternative</span></a>
+<a href="#replay" data-s="replay"><b>2 · Replay results</b><span>Quality, wait, throughput</span></a>
+<a href="#verdict" data-s="verdict"><b>3 · Cost and verdict</b><span>Switch or keep</span></a>
+<a href="#statement" data-s="statement"><b>4 · Savings statement</b><span>Monthly, after fee</span></a>
+</nav>
+<div class="live" id="live"></div>
+
+<section class="step" id="s-workload">
+<p class="lead">Type in any box below; the result strip above updates as you type. Enter the workload and what it costs today. The best alternative is whatever the operator would run without XM-Serve.</p>
+<div class="btns"><button class="pri" data-preset="pass">Load example buyer (passes)</button><button data-preset="walk">Load buyer who should walk away</button><button data-preset="reset">Reset</button></div>
+<div class="grid g3">
+<div class="card"><h3>Workload and GPUs</h3>
+<label>GPUs<input type="number" id="gpus" step="1" min="1"></label>
+<label><span>Cost per GPU-hour ($)<small>All-in, as the operator pays it</small></span><input type="number" id="rate" step="0.05" min="0"></label>
+<label><span>Tokens per successful task<small>Long coding-agent task, incl. reread context</small></span><input type="number" id="tokens" step="100000" min="1"></label>
+<label><span>Operator price per 1M tokens ($)<small>What the operator charges its customer</small></span><input type="number" id="price" step="0.05" min="0"></label></div>
+<div class="card"><h3>XM-Serve added costs ($/hour)</h3>
+<label><span>Added memory tier<small>Donor GPUs or memory, Run B only</small></span><input type="number" id="memory" step="0.1" min="0"></label>
+<label><span>Support</span><input type="number" id="support" step="0.1" min="0"></label>
+<label><span>Switching, allocated<small>Integration and migration spread over the contract</small></span><input type="number" id="switching" step="0.1" min="0"></label></div>
+<div class="card t"><h3>Contract terms</h3>
+<label><span>Netpreme share of savings (%)<small>Negotiated per contract</small></span><input type="number" id="share" step="1" min="0" max="100"></label>
+<label><span>Buyer's minimum saving after fee (%)<small>This buyer's hurdle</small></span><input type="number" id="hurdle" step="1" min="0" max="99"></label>
+<p class="note">Netpreme charges only on measured positive savings. If XM-Serve costs more, the fee is zero.</p></div>
+</div>
+<div class="next"><a href="#replay"><button class="pri">Next: replay results →</button></a></div>
+</section>
+
+<section class="step" id="s-replay">
+<p class="lead">The trial replays the operator's own sessions, including the pauses between turns. Run A and Run B use the same software, GPUs and workload; only Run B adds memory. The gap between them is what extra memory is worth.</p>
+<div class="grid g2">
+<div class="card"><h3>Replay results <span class="k">(enter measured values)</span></h3>
+<table><thead><tr><th></th><th>Best alternative</th><th>Run A: XM-Serve</th><th>Run B: + memory</th></tr></thead><tbody>
+<tr><td>Answer quality (pass rate %)</td><td><input type="number" id="qualAlt" step="1"></td><td><input type="number" id="qualA" step="1"></td><td><input type="number" id="qualB" step="1"></td></tr>
+<tr><td>95th-percentile wait (s)</td><td><input type="number" id="p95Alt" step="0.1"></td><td><input type="number" id="p95A" step="0.1"></td><td><input type="number" id="p95B" step="0.1"></td></tr>
+<tr><td>Successful tasks per hour</td><td><input type="number" id="tasksAlt" step="1" min="1"></td><td><input type="number" id="tasksA" step="1" min="1"></td><td><input type="number" id="tasksB" step="1" min="1"></td></tr>
+<tr><td>Cost per successful task</td><td id="rcAlt"></td><td id="rcA"></td><td id="rcB"></td></tr>
+</tbody></table>
+<div style="margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="k">Price the verdict on</span><div class="seg"><button data-run="A">Run A</button><button data-run="B">Run B</button></div></div></div>
+<div class="card t"><h3>What the added memory is worth</h3>
+<div class="big" id="memVal"></div><div class="k" id="memSub"></div>
+<p style="font-size:14px;margin:14px 0 0" id="memText"></p>
+<p class="note">This feeds chip condition 2: extra memory caused a useful improvement. The operator can establish the value; a builder must verify fit; only production silicon shows real XM-100 performance and cost.</p></div>
+</div>
+<div class="next"><a href="#verdict"><button class="pri">Next: cost and verdict →</button></a></div>
+</section>
+
+<section class="step" id="s-verdict">
+<div class="verdict" id="vbox"><div class="big" id="vword"></div><div><b id="vhead"></b><p id="vsub"></p></div></div>
+<div class="card t" style="margin-top:16px"><h3>Try it: drag to change the deal <span class="k">(everything on this page updates)</span></h3>
+<div class="grid g3" id="sliders"></div><div class="btns" style="margin:10px 0 0"><button class="pri" data-preset="pass">Example buyer (passes)</button><button data-preset="walk">Buyer who should walk away</button><button data-preset="reset">Reset</button></div></div>
+<div class="grid g2" style="margin-top:16px">
+<div class="card"><h3>Where each dollar of the alternative goes, per successful task</h3>
+<div class="k" style="margin-bottom:6px">Best alternative</div><div class="bar"><div id="bAlt" style="background:#C9C3B6;width:100%"></div></div>
+<div class="k" style="margin:12px 0 6px">With XM-Serve</div><div class="bar" id="bXm"></div><div class="leg" id="bLeg"></div>
+<div class="grid g3" style="margin-top:16px">
+<div><div class="k">Saving before fee</div><div class="big" id="vSav"></div></div>
+<div><div class="k">Netpreme fee</div><div class="big" style="color:var(--acc)" id="vFee"></div></div>
+<div><div class="k">Customer keeps</div><div class="big" id="vKeep"></div></div></div>
+<p class="note">XM-Serve cost includes compute, the memory tier, support and allocated switching before the fee is calculated.</p></div>
+<div class="card"><h3>Three tests before switching</h3>
+<div id="gates"></div>
+<h3 style="margin-top:14px">Where this buyer walks away</h3>
+<div class="kpi"><span>Added cost can rise to<small>before saving after fee falls below the hurdle</small></span><span class="v" id="beCost"></span></div>
+<div class="kpi"><span>Successful tasks must rise at least<small>versus the best alternative, at today's added cost</small></span><span class="v" id="beTasks"></span></div></div>
+</div>
+<div class="grid g2" style="margin-top:16px">
+<div class="card"><h3>Operator view</h3>
+<table><thead><tr><th></th><th>Best alternative</th><th>XM-Serve, before fee</th><th>After fee</th></tr></thead><tbody id="opTable"></tbody></table></div>
+<div class="card"><h3>Saving after fee vs successful tasks per hour</h3><svg id="chart" viewBox="0 0 460 230" width="100%" role="img" aria-label="Customer saving after fee by successful tasks per hour"></svg>
+<p class="note">Dashed line: this buyer's hurdle. Dot: the selected run.</p></div>
+</div>
+<div class="next"><a href="#statement"><button class="pri">Next: savings statement →</button></a></div>
+</section>
+
+<section class="step" id="s-statement">
+<p class="lead">After a passing trial, the contract bills on measured savings. Each month the customer sees what the alternative would have cost, what it actually paid, our fee, and its final cost.</p>
+<div class="grid g2">
+<div class="card"><h3>Monthly savings statement</h3>
+<label><span>Hours run this month</span><input type="number" id="hours" step="10" min="1"></label>
+<label><span>Measured XM-Serve cost per successful task ($)<small>From metering, before fee</small></span><input type="number" id="measured" step="0.01" min="0"></label>
+<table style="margin-top:8px"><tbody id="stTable"></tbody></table></div>
+<div class="card t"><h3>Scorecard: proposed targets</h3><div id="kpis"></div>
+<label style="margin-top:6px"><span>Paid contract signed</span><input type="checkbox" id="signed" style="width:18px;height:18px"></label>
+<label><span>Contracted volume still running at 90 days (%)</span><input type="number" id="retained" step="1" min="0" max="100"></label>
+<p class="note">Top three: should the customer switch? Bottom three: should Netpreme expand? Targets are team proposals to agree with each operator.</p></div>
+</div>
+</section>
+
+<footer>Team prototype for the Netpreme × HBSA PM Case Competition 2026. Not a Netpreme product. All defaults are illustrative team assumptions, chosen to match our deck: $1.00 → $0.80 per successful task before fee, a 25% share, and a 10% buyer hurdle. Case benchmark (one H100-class GPU): up to 6.7× faster time to first token, about +30% capacity. No customer data is used.</footer>
+</div>
+<script>
+// XM-Serve switch calculator: pure functions (team prototype, illustrative inputs)
+function compute(i){
+  const gpuHr=i.gpus*i.rate;
+  const altHr=gpuHr;                                   // best alternative: same GPUs, no XM-Serve
+  const runAHr=gpuHr+i.support+i.switching;            // XM-Serve, existing host memory
+  const runBHr=runAHr+i.memory;                        // XM-Serve plus added memory tier
+  const run=i.useRun==="A"?{hr:runAHr,t:i.tasksA,q:i.qualA,p:i.p95A}:{hr:runBHr,t:i.tasksB,q:i.qualB,p:i.p95B};
+  const alt=altHr/i.tasksAlt, xm=run.hr/run.t;
+  const saving=Math.max(alt-xm,0), fee=i.share*saving, pay=xm+fee, keep=alt-pay, keepPct=keep/alt;
+  const T=i.tokens, P=i.price;
+  const per1M=(hr,t)=>hr/(t*T)*1e6, cap=t=>t*T/i.gpus/3600, margin=c=>(P-c)/P;
+  const k=1-i.hurdle/(1-i.share);                      // keep% >= hurdle  <=>  xm <= alt*k
+  const maxHr=run.t*alt*k, maxAddOn=maxHr-gpuHr;
+  const minTasks=run.hr/(alt*k), minUplift=minTasks/i.tasksAlt-1;
+  const gates={quality:run.q>=i.qualAlt, wait:run.p<=i.p95Alt, cost:keepPct>=i.hurdle-1e-9};
+  const memA=runAHr/i.tasksA, memB=runBHr/i.tasksB;
+  return {gpuHr,altHr,runHr:run.hr,runTasks:run.t,alt,xm,saving,fee,pay,keep,keepPct,
+    alt1M:per1M(altHr,i.tasksAlt),xm1M:per1M(run.hr,run.t),pay1M:pay/T*1e6,
+    capAlt:cap(i.tasksAlt),capXm:cap(run.t),
+    mAlt:margin(per1M(altHr,i.tasksAlt)/1e6*1e6),mXm:margin(per1M(run.hr,run.t)),mPay:margin(pay/T*1e6),
+    maxAddOn,minTasks,minUplift,gates,switch:gates.quality&&gates.wait&&gates.cost,
+    memA,memB,memValue:memA-memB,uplift:run.t/i.tasksAlt-1};
+}
+function statement(i,c){
+  const tasks=c.runTasks*i.hours, altCost=c.alt*tasks, actual=i.measured*tasks;
+  const sav=Math.max(altCost-actual,0), fee=i.share*sav, final=actual+fee;
+  return {tasks,altCost,actual,sav,fee,final,custSave:altCost-final,custPct:(altCost-final)/altCost,
+    predErr:(c.xm-i.measured)/i.measured};
+}
+const DEFAULTS={gpus:10,rate:3.00,tasksAlt:30,tokens:1.2e6,price:1.50,share:0.25,hurdle:0.10,
+  memory:1.20,support:0.50,switching:0.30,
+  qualAlt:0.92,p95Alt:8.0,tasksA:35,qualA:0.92,p95A:6.5,tasksB:40,qualB:0.93,p95B:4.2,useRun:"B",
+  hours:720,measured:0.82,signed:true,retained:0.85};
+
+
+const PCT=new Set(["share","hurdle","qualAlt","qualA","qualB","retained"]);
+let S=Object.assign({},DEFAULTS);
+const SL=[["tasksB","Successful tasks/hr with XM-Serve (Run B)",25,60,1,v=>v.toFixed(0)],["memory","Added memory tier, $/hour",0,10,0.1,v=>"$"+v.toFixed(2)],["rate","Cost per GPU-hour",1,6,0.05,v=>"$"+v.toFixed(2)],
+ ["tasksAlt","Successful tasks/hr, best alternative",10,60,1,v=>v.toFixed(0)],["share","Netpreme share of savings",0,0.5,0.01,v=>Math.round(v*100)+"%"],["hurdle","Buyer's minimum saving after fee",0,0.3,0.01,v=>Math.round(v*100)+"%"]];
+const PRESETS={pass:{},walk:{memory:3.5,tasksB:36,p95B:5.0,measured:0.95}};
+const $=id=>document.getElementById(id), $$=s=>document.querySelectorAll(s);
+const usd=(v,d=2)=>(v<0?"−$":"$")+Math.abs(v).toFixed(d), pct=(v,d=1)=>(v*100).toFixed(d)+"%";
+const big=v=>v>=1e6?"$"+(v/1e6).toFixed(2)+"M":"$"+Math.round(v).toLocaleString();
+function load(){for(const k in S){const el=$(k);if(!el)continue;if(el.type==="checkbox")el.checked=!!S[k];else el.value=PCT.has(k)?+(S[k]*100).toFixed(2):S[k];}}
+function read(e){const el=e.target;if(!el.id||!(el.id in S))return;let v=el.type==="checkbox"?el.checked:parseFloat(el.value);
+ if(el.type!=="checkbox"){if(!isFinite(v))return;if(PCT.has(el.id))v=v/100;}S[el.id]=v;render();}
+document.getElementById("sliders").innerHTML=SL.map(([k,l,a,b,s])=>`<div class="sl"><div class="row"><span>${l}</span><b id="v_${k}"></b></div><input type="range" data-k="${k}" min="${a}" max="${b}" step="${s}" aria-label="${l}"></div>`).join("");
+function sync(){const a=document.activeElement;
+ for(const k in S){const el=$(k);if(el&&el!==a){if(el.type==="checkbox")el.checked=!!S[k];else el.value=PCT.has(k)?+(S[k]*100).toFixed(2):S[k];}}
+ SL.forEach(([k,,,,,f])=>{const r=document.querySelector(`[data-k="${k}"]`);if(r&&r!==a)r.value=S[k];$("v_"+k).textContent=f(S[k]);});}
+document.addEventListener("input",e=>{if(e.target.dataset.k){S[e.target.dataset.k]=parseFloat(e.target.value);render();}});
+document.addEventListener("input",read);document.addEventListener("change",read);
+$$("[data-preset]").forEach(b=>b.onclick=()=>{S=Object.assign({},DEFAULTS,PRESETS[b.dataset.preset]||{});render();});
+$$("[data-run]").forEach(b=>b.onclick=()=>{S.useRun=b.dataset.run;render();});
+function render(){
+ const c=compute(S), st=statement(S,c); sync();
+ $("live").innerHTML=`<b class="w" style="background:${c.switch?"var(--ink)":"var(--acc)"}">${c.switch?"Switch":"Keep current"}</b><span>Customer pays <b>${usd(c.pay)}</b> vs <b>${usd(c.alt)}</b> per successful task</span><span class="sep">|</span><span>Saves <b>${pct(c.keepPct)}</b> after fee (hurdle ${pct(S.hurdle,0)})</span><span class="sep">|</span><span>Netpreme fee <b>${usd(c.fee)}</b></span>`;
+ $$("[data-run]").forEach(b=>b.classList.toggle("on",b.dataset.run===S.useRun));
+ const rA=(S.gpus*S.rate+S.support+S.switching)/S.tasksA, rB=(S.gpus*S.rate+S.support+S.switching+S.memory)/S.tasksB;
+ $("rcAlt").textContent=usd(c.alt);$("rcA").textContent=usd(rA);$("rcB").textContent=usd(rB);
+ $("memVal").textContent=(c.memValue>=0?usd(c.memValue):"−"+usd(-c.memValue).slice(1))+" per task";
+ $("memSub").textContent=`Run A ${usd(rA)} → Run B ${usd(rB)} per successful task`;
+ const tot=c.alt-rB;
+ $("memText").textContent=c.memValue>0&&tot>0?`Of the ${usd(tot)} saving against the alternative, about ${pct(Math.min(c.memValue/tot,1),0)} comes from the added memory and the rest from the software alone.`:c.memValue>0?"Added memory helps, but XM-Serve still does not beat the best alternative on cost.":"In this run the added memory does not pay for itself. That is evidence against chip condition 2.";
+ // verdict
+ const go=c.switch;$("vbox").className="verdict "+(go?"go":"no");
+ $("vword").textContent=go?"Switch":"Keep current";
+ $("vhead").textContent=go?`Customer saves ${pct(c.keepPct)} per successful task after our fee`:"Keep the best alternative for this workload";
+ const why=[];if(!c.gates.quality)why.push("answer quality is lower");if(!c.gates.wait)why.push("95th-percentile wait is longer");if(!c.gates.cost)why.push(`saving after fee is ${pct(c.keepPct)}, below the ${pct(S.hurdle,0)} hurdle`);
+ $("vsub").textContent=go?`Pays ${usd(c.pay)} instead of ${usd(c.alt)}. Quality and wait time hold. Priced on Run ${S.useRun}.`:"Because "+why.join(", and ")+". Telling this buyer no is part of the product.";
+ const W=c.alt, w=x=>Math.max(0,x/W*100);
+ $("bAlt").textContent=usd(c.alt)+" per successful task";
+ const seg=(x,st,lab)=>x>0?`<div style="${st};width:${Math.min(w(x),100)}%">${w(x)>=22?lab:""}</div>`:"";
+ $("bXm").innerHTML=seg(c.xm,"background:var(--ink);color:#fff",usd(c.xm)+" XM-Serve")+seg(c.fee,"background:var(--acc);padding:0","")+seg(c.keep,"background:#fff;border:1px dashed var(--ink)",usd(c.keep)+" kept");
+ $("bLeg").innerHTML=`<span><i style="background:var(--ink)"></i>XM-Serve cost ${usd(c.xm)}</span><span><i style="background:var(--acc)"></i>Netpreme fee ${usd(c.fee)}</span><span><i style="background:#fff;border:1px dashed var(--ink)"></i>Customer keeps ${usd(c.keep)}</span>`;
+ $("vSav").textContent=usd(c.saving);$("vFee").textContent=usd(c.fee);$("vKeep").textContent=usd(c.keep);
+ const g=(ok,t,s)=>`<div class="gate"><span class="dot ${ok?"y":"n"}">${ok?"✓":"✕"}</span><span><b>${t}</b><br><span class="k">${s}</span></span></div>`;
+ const q=S.useRun==="A"?S.qualA:S.qualB, p=S.useRun==="A"?S.p95A:S.p95B;
+ $("gates").innerHTML=g(c.gates.quality,"Answer quality",`${pct(q,0)} vs ${pct(S.qualAlt,0)}: no worse than the alternative`)+g(c.gates.wait,"95th-percentile wait",`${p.toFixed(1)}s vs ${S.p95Alt.toFixed(1)}s: no longer than the alternative`)+g(c.gates.cost,"Cost per successful task after fee",`${pct(c.keepPct)} saving vs ${pct(S.hurdle,0)} hurdle`);
+ $("beCost").textContent=(c.maxAddOn>0?usd(c.maxAddOn)+" per hour":"Already above")+` (now ${usd(c.runHr-c.gpuHr)})`;
+ $("beTasks").textContent=pct(c.minUplift)+` (to ${c.minTasks.toFixed(1)}/hr)`;
+ $("opTable").innerHTML=[["Cost per 1M tokens",usd(c.alt1M,3),usd(c.xm1M,3),usd(c.pay1M,3)],["Capacity per GPU (tokens/s)",Math.round(c.capAlt).toLocaleString(),Math.round(c.capXm).toLocaleString(),Math.round(c.capXm).toLocaleString()],["Operator margin",pct(c.mAlt),pct(c.mXm),pct(c.mPay)],["Cost per successful task",usd(c.alt),usd(c.xm),usd(c.pay)]].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="hl">${r[3]}</td></tr>`).join("");
+ chart(c);
+ // statement
+ $("stTable").innerHTML=[["Successful tasks",Math.round(st.tasks).toLocaleString()],["Cost at best alternative",big(st.altCost)],["Actual XM-Serve cost",big(st.actual)],["Measured savings",big(st.sav)],["Netpreme fee ("+pct(S.share,0)+" of savings)",big(st.fee)],["Customer's final cost",big(st.final)],["Customer saving after fee",big(st.custSave)+" ("+pct(st.custPct)+")"]].map((r,i)=>`<tr><td>${r[0]}</td><td class="${i>=5?"hl":""}">${r[1]}</td></tr>`).join("");
+ const kp=(ok,t,v,tg)=>`<div class="kpi"><span><span class="dot ${ok?"y":"n"}" style="display:inline-grid;margin-right:8px;vertical-align:middle">${ok?"✓":"✕"}</span>${t}<small>Target: ${tg}</small></span><span class="v">${v}</span></div>`;
+ $("kpis").innerHTML=kp(c.gates.quality,"Answer quality",pct(q,0),"no worse than alternative")+kp(c.gates.wait,"95th-percentile wait",p.toFixed(1)+"s","no longer than alternative")+kp(st.custPct>=S.hurdle,"Cost per successful task, after fee",pct(st.custPct)+" lower",`at least ${pct(S.hurdle,0)} lower`)+kp(Math.abs(st.predErr)<=0.10,"Calculator prediction error",(st.predErr>=0?"+":"")+pct(st.predErr),"within 10% of measured")+kp(!!S.signed,"Paid adoption",S.signed?"Signed":"Not signed","one operator by month 12")+kp(S.retained>=0.80,"Use after 90 days",pct(S.retained,0),"80% of contracted volume");
+}
+function chart(c){
+ const svg=$("chart"),L=46,R=446,T=14,B=190,lo=S.tasksAlt,hi=Math.max(S.tasksAlt*1.8,c.runTasks*1.15);
+ const y0=-0.3,y1=0.4,X=t=>L+(t-lo)/(hi-lo)*(R-L),Y=v=>B-(Math.max(y0,Math.min(y1,v))-y0)/(y1-y0)*(B-T);
+ const f=t=>{const x=c.runHr/t,s=c.alt-x;return s>0?(1-S.share)*s/c.alt:s/c.alt;};
+ let d="";for(let i=0;i<=80;i++){const t=lo+(hi-lo)*i/80;d+=(i?"L":"M")+X(t).toFixed(1)+","+Y(f(t)).toFixed(1);}
+ let ax="";for(const v of[-0.2,-0.1,0,0.1,0.2,0.3,0.4]){ax+=`<line x1="${L}" x2="${R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v===0?"#9C978C":"#EFEAE0"}"/><text x="${L-6}" y="${Y(v)+4}" font-size="11" text-anchor="end" fill="#6B6860">${Math.round(v*100)}%</text>`;}
+ for(let i=0;i<=4;i++){const t=lo+(hi-lo)*i/4;ax+=`<text x="${X(t)}" y="${B+16}" font-size="11" text-anchor="middle" fill="#6B6860">${t.toFixed(0)}</text>`;}
+ svg.innerHTML=ax+`<line x1="${L}" x2="${R}" y1="${Y(S.hurdle)}" y2="${Y(S.hurdle)}" stroke="#B4532A" stroke-dasharray="5 4"/><text x="${R}" y="${Y(S.hurdle)-5}" font-size="11" text-anchor="end" fill="#B4532A">${Math.round(S.hurdle*100)}% hurdle</text><path d="${d}" fill="none" stroke="#2B2B2B" stroke-width="2"/><circle cx="${X(c.runTasks)}" cy="${Y(c.keepPct)}" r="5.5" fill="${c.switch?"#2B2B2B":"#B4532A"}" stroke="#fff" stroke-width="2"/><text x="${(L+R)/2}" y="${B+32}" font-size="11" text-anchor="middle" fill="#6B6860">Successful tasks per hour with XM-Serve</text>`;
+}
+function route(){const h=(location.hash||"#workload").slice(1),k=["workload","replay","verdict","statement"].includes(h)?h:"workload";
+ $$(".step").forEach(s=>s.classList.toggle("on",s.id==="s-"+k));$$("#nav a").forEach(a=>a.classList.toggle("on",a.dataset.s===k));$("live").style.display=k==="verdict"?"none":"flex";window.scrollTo(0,0);}
+window.addEventListener("hashchange",route);render();route();
+</script></body></html>
